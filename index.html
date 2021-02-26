@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student List</title>
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="">
+    <div class="container">
+        <div class=" card p-5">
+            <div class="left-inputCol" style="text-align: center;">
+                <input type="text" placeholder="Student's Name" class="form-control mb-3" id="eventInput">
+                <input type="text" placeholder="Phone Number" class="form-control mb-3" id="eventDesc"1>
+                <input type="button" value="Update" class="btn bg-primary" style="color: white;" id="btn">
+            </div>        
+        </div>
+        <div id="resultField" class="mt-5">
+            <table class="table table-striped table-dark">
+                <thead class="thead-light">
+                    <tr>
+                        <th >S/N</th>
+                        <th>Student's Name</th>
+                        <th>Phone Number</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tBody">
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        var newEvId,newDesId, eventInput, descInput;
+        var btn = document.getElementById('btn');
+        var cache = [];              
+        btn.addEventListener('click', toDo);   
+        if (localStorage.getItem('data')){
+            window.addEventListener('load', crtRow);
+        }     
+        
+        //Creating a function that gets input values and store them in an array as object-------
+        function getValue(){
+            eventInput = document.getElementById("eventInput").value;
+            descInput = document.getElementById("eventDesc").value;
+            var obj = {
+                event : eventInput,
+                description : descInput
+            }            
+            cache.push(obj)
+            localStorage.setItem('data',JSON.stringify(cache))
+        }
+        //--------------------------------------------------------------------------------------
+
+        //creating a function that creates a table row with value---------------------------------------
+        function crtRow(){           
+            var tBody = document.getElementById("tBody");
+            tBody.innerHTML="";
+            mem = localStorage.getItem('data');
+            cache = JSON.parse(mem);
+            cache.forEach (function (ram,i){
+                tBody.innerHTML += 
+                `<tr>
+                <td><div id="SN"><span>${i+1}</span></div></td>
+                <td><div><p id="${newEvId}">${ram.event}</p</div></td>
+                <td><div ><p id="${newDesId}">${ram.description}</p</div></td>
+                <td><input type="button" value="DEL" class="btn bg-danger " onClick= del(${i})></td>
+                </tr>`; 
+            })
+        }
+        //----------------------------------------------------------------------------------------------------
+
+        //creating a function that executes the TODO
+        function toDo (){
+            getValue();
+            crtRow();
+            
+        }
+
+
+        function del(anc){
+            localStorage.removeItem('data')
+            cache.splice(anc,1);
+            localStorage.setItem('data',JSON.stringify(cache))
+            console.log(cache);
+            crtRow();           
+        }
+    </script>
+</body>
+</html>
